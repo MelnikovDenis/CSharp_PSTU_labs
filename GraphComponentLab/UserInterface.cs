@@ -4,13 +4,13 @@ public static class UserInterface{
       //главный цикл приложения
       public static void Execute(){
             bool needExit = false;
-            Graph graph = InputGraph();
+            UnweightedGraph graph = InputGraph();
             while (!needExit)
             {
                   Console.Clear();
                   ColorDisplay("1. Найти компоненты сильной связности графа\n2. Построить ярусно-параллельную форму\n3. Ввести новую матрицу\n0. Выйти\n", ConsoleColor.Green);
                   ColorDisplay("Матрица смежности графа:\n", ConsoleColor.Magenta);
-                  Console.Write(Graph.ToString(graph.AdjacencyMatrix, graph.Names));
+                  Console.Write(UnweightedGraph.ToString(graph.Matr, graph.Names));
                   int command = GetInt("Введите номер команды: ", "Номер команды должен быть целым числом в диапозоне [1, 2], повторите ввод =>\n",
                         (int num) => num >= 1 || num <= 3 || num == 0);                  
                   switch (command)
@@ -33,7 +33,7 @@ public static class UserInterface{
             }
       }
       //вывод ярусно-параллельной формы графа
-      static void DisplayTieredParallelForm(Graph graph){
+      static void DisplayTieredParallelForm(UnweightedGraph graph){
             try{
                   var tieredParallelForm = graph.GetTieredParallelForm();
                   ColorDisplay("Параллельно-ярусная форма:\n", ConsoleColor.Magenta);
@@ -50,10 +50,10 @@ public static class UserInterface{
             
       }
       //вывод информации о компонентах сильной связности
-      static void DisplayStronglyConnectedComponent(Graph graph){
+      static void DisplayStronglyConnectedComponent(UnweightedGraph graph){
             var strConnComps = graph.GetStronglyСonnectedСomponent();            
             ColorDisplay("Матрица компонентов сильной связности:\n", ConsoleColor.Magenta);
-            Console.Write(Graph.ToString(graph.GetStronglyConnectedComponentMatrix(), graph.Names));
+            Console.Write(UnweightedGraph.ToString(graph.GetStronglyConnectedComponentMatrix(), graph.Names));
             ColorDisplay("Компоненты сильной связности графа:\n", ConsoleColor.Magenta);
             foreach(var strConnComp in strConnComps){
                   Console.Write("{ ");
@@ -64,7 +64,7 @@ public static class UserInterface{
             }
       }
       //ввод графа
-      static Graph InputGraph()
+      static UnweightedGraph InputGraph()
       {
             int len = GetInt("Введите кол-во вершин графа: ", 
                   $"Кол-во вершин должно быть в диапозоне [2; {MAX_LENGTH}], повторите ввод =>\n",
@@ -83,7 +83,7 @@ public static class UserInterface{
                               (int num) => num >= 0 && num <= 1) == 1;
                   }  
             }            
-            return new Graph(adjacencyMatrix, names);
+            return new UnweightedGraph(adjacencyMatrix, names);
       }
       //ввод целого числа с консоли с обработкой ошибок
       static int GetInt(string inputMessage, string errorMessage, Predicate<int> condition)
