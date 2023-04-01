@@ -1,26 +1,25 @@
 using System.Text; //для StringBuilder
 namespace GraphComponentLab;
-class UnweightedGraph : Graph<bool>{      
+public class UnweightedGraph : Graph<bool>{      
       public UnweightedGraph(bool[,] Matr, char[] Names) : base(Matr, Names){
            
       }
-      //не перегружаю object.ToString, чтобы можно было любую промежуточную матрицу вывести
-      public static string ToString(bool[,] matrix, char[] names){
-            StringBuilder strBuilder = new StringBuilder(matrix.Length * 3);
+      public override string ToString(){
+            StringBuilder strBuilder = new StringBuilder(Matr.Length * 3);
             strBuilder.Append('\t');
-            for(int i = 0; i < names.Length; ++i){
-                  strBuilder.Append(names[i]).Append('\t');
+            for(int i = 0; i < Names.Length; ++i){
+                  strBuilder.Append(Names[i]).Append('\t');
             }
             strBuilder.Append('\n');
-            for(int i = 0; i < matrix.GetLength(0); ++i){
-                  strBuilder.Append(names[i]).Append('\t');
-                  for(int j = 0; j < matrix.GetUpperBound(1); ++j){
-                        strBuilder.Append(matrix[i, j] ? 1 : 0).Append('\t');
+            for(int i = 0; i < Matr.GetLength(0); ++i){
+                  strBuilder.Append(Names[i]).Append('\t');
+                  for(int j = 0; j < Matr.GetUpperBound(1); ++j){
+                        strBuilder.Append(Matr[i, j] ? 1 : 0).Append('\t');
                   }
-                  strBuilder.Append(matrix[i, matrix.GetUpperBound(1)] ? 1 : 0).Append('\n');
+                  strBuilder.Append(Matr[i, Matr.GetUpperBound(1)] ? 1 : 0).Append('\n');
             }    
             return strBuilder.ToString();
-      }            
+      }              
       //умножение логических матриц (не поэлементное)
       private static bool[,] BooleanMultiplyByMatrix(bool[,] firstMatrix, bool[,] secondMatrix){
             if(firstMatrix.GetLength(1) == secondMatrix.GetLength(0)){

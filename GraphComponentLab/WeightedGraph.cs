@@ -5,22 +5,16 @@ public class WeightedGraph : Graph<int>
       public WeightedGraph(int[,] Matr, char[] Names) : base(Matr, Names){
           
       }
-      //не перегружаю object.ToString, чтобы можно было любую промежуточную матрицу вывести
-      public static string ToString(int[,] matrix, char[] names){
-            StringBuilder strBuilder = new StringBuilder(matrix.Length * 3);
-            strBuilder.Append('\t');
-            for(int i = 0; i < names.Length; ++i){
-                  strBuilder.Append(names[i]).Append('\t');
-            }
-            strBuilder.Append('\n');
-            for(int i = 0; i < matrix.GetLength(0); ++i){
-                  strBuilder.Append(names[i]).Append('\t');
-                  for(int j = 0; j < matrix.GetUpperBound(1); ++j){
-                        strBuilder.Append(matrix[i, j]).Append('\t');
+      public UnweightedGraph ToUnweighted()
+      {
+            var matr = new bool[Count, Count];
+            for(int i = 0; i < Count; ++i){
+                  for(int j = 0; j < Count; ++j){
+                        matr[i, j] = Matr[i, j] > 1;
                   }
-                  strBuilder.Append(matrix[i, matrix.GetUpperBound(1)]).Append('\n');
-            }    
-            return strBuilder.ToString();
+            }
+            var unwGraph = new UnweightedGraph(matr, Names);
+            return unwGraph;
       }
       //поиск остова по краскалу
       public List<(int, int)> Kruskal()
@@ -47,9 +41,9 @@ public class WeightedGraph : Graph<int>
       //првоерка на наличие циклов
       private bool HaveCycle(List<(int, int)> edges)
       {
-            var vertices = new Dictionary<int, bool>(Count);
+            var vertices = new Dictionary<int, bool>(Count); //все задействованные вершины в формате индекс_вершины: была_ли_обойдена_в_dfs
             bool result = false;  
-            //задействованные вершины
+            //добавляем задействованные вершины
             foreach(var edge in edges)
             {
                   if(!vertices.ContainsKey(edge.Item1))
