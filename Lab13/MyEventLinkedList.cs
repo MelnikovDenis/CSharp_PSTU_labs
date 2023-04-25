@@ -93,7 +93,7 @@ public class MyEventLinkedList<T> : MyExtendedLinkedList<T>{
       }
       public override bool RemoveFrom(int index)
       {
-            if(index >= 0 || index < Count){
+            if(index >= 0 && index < Count){
                   CountChanged?.Invoke(new MyLinkedListHandlerEventArgs(this, Name, MyLinkedListHandlerEventArgs.ChangeTypes[1], this[index]));
                   if (Count != 1)
                   {
@@ -102,7 +102,7 @@ public class MyEventLinkedList<T> : MyExtendedLinkedList<T>{
                         }
                         else{
                               Node? currentNode = StartNode;
-                              while(--index > 0){
+                              while(index-- > 0){
                                     currentNode = currentNode!.NextNode;
                               }
                               currentNode!.NextNode = currentNode!.NextNode!.NextNode;

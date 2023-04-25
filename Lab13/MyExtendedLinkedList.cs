@@ -5,9 +5,9 @@ public class MyExtendedLinkedList<T> : MyLinkedList<T>{
       public string Name {get; set;}
       public virtual T this[int index]{
             get{
-                  if(index >= 0 || index < Count){
+                  if(index >= 0 && index < Count){
                         Node? currentNode = StartNode;
-                        while(--index > 0){
+                        while(index-- > 0){
                               currentNode = currentNode!.NextNode;
                         }
                         return currentNode!.Data;
@@ -17,7 +17,7 @@ public class MyExtendedLinkedList<T> : MyLinkedList<T>{
                   }
             }
             set{
-                  if(index >= 0 || index < Count){
+                  if(index >= 0 && index < Count){
                         Node? currentNode = StartNode;
                         while(index-- > 0){
                               currentNode = currentNode!.NextNode;
@@ -33,7 +33,7 @@ public class MyExtendedLinkedList<T> : MyLinkedList<T>{
             this.Name = Name;
       }
       public virtual bool RemoveFrom(int index){
-            if(index >= 0 || index < Count){
+            if(index >= 0 && index < Count){
                   if (Count != 1)
                   {
                         if(index == 0){
@@ -41,7 +41,7 @@ public class MyExtendedLinkedList<T> : MyLinkedList<T>{
                         }
                         else{
                               Node? currentNode = StartNode;
-                              while(--index > 0){
+                              while(index-- > 0){
                                     currentNode = currentNode!.NextNode;
                               }
                               currentNode!.NextNode = currentNode!.NextNode!.NextNode;

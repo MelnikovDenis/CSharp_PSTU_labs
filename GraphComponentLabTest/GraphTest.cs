@@ -5,32 +5,96 @@ namespace GraphComponentLabTest;
 [TestClass]
 public class GraphTest
 {
-    Graph<int> g = new Graph<int>(new int[,]{{0, 10, 0, 5, 0, 6, 0},
-                                            {10, 0, 6, 1, 4, 0, 5},
-                                            {0, 6, 0, 3, 1, 2, 0},
-                                            {5, 1, 3, 0, 3, 0, 5},
-                                            {0, 4, 1, 3, 0, 4, 2},                                                    
-                                            {6, 0, 2, 0, 4, 0, 0},
-                                            {0, 5, 0, 5, 2, 0, 0}}, 
-                                new char[]{'a', 'b', 'c', 'd', 'e', 'f', 'g'});
-    [TestMethod]
-    public void CountTest()
+    Graph kruskalGraph = new Graph(new int[,]
     {
-        Assert.AreEqual<int>(7, g.Count);
+        {0, 10, 0, 5, 0, 6, 0},
+        {10, 0, 6, 1, 4, 0, 5},
+        {0, 6, 0, 3, 1, 2, 0},
+        {5, 1, 3, 0, 3, 0, 5},
+        {0, 4, 1, 3, 0, 4, 2},                                                    
+        {6, 0, 2, 0, 4, 0, 0},
+        {0, 5, 0, 5, 2, 0, 0}
+    });
+    Graph tierdParallelGraph = new Graph(new int[,]
+    {
+        {0, 1, 0, 0, 0, 1, 1, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 1, 1, 0, 0, 0},
+        {1, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 1, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 1, 0, 0, 1, 0, 0, 0}
+    }
+
+    );
+    Graph stronglyConnectedGraph = new Graph(new int[,]
+    {
+        {0, 1, 0, 0, 0},
+        {0, 0, 0, 1, 0},
+        {0, 1, 0, 0, 0},
+        {0, 0, 1, 0, 0},
+        {1, 0, 1, 1, 0}
+    });
+    [TestMethod]
+    public void KruskalTest()
+    {
+        var Kruskal = kruskalGraph.Kruskal();
+        var sum = (from edge in Kruskal select kruskalGraph.Matr[edge.Item1, edge.Item2]).Sum();
+        foreach(var edge in Kruskal)
+        {
+            Trace.WriteLine($"[{edge.Item1}, {edge.Item2}]: {kruskalGraph.Matr[edge.Item1, edge.Item2]}");
+        }
+        Assert.AreEqual<int>(14, sum);
+        Assert.AreEqual<int>(6, Kruskal.Count);
     }
     [TestMethod]
-    public void SymmetricTest()
-    {        
-        Assert.AreEqual<int>(5, g.Matr[0, 3]);
-        Assert.AreEqual<int>(10, g[0, 1]);
-        Assert.AreEqual<char>('a', g.Names[0]);
-        for(int i = 0; i < g.Count; ++i)
-        {
-            for(int j = 0; j < g.Count; ++j)
-            {
-                Trace.WriteLine($"g[{i}, {j}]: {g[i, j]} - g[{j}, {i}]: {g[j, i]}");
-                Assert.AreEqual<int>(g[i, j], g[j, i]);                
-            }
-        }
+    public void TierdParallelFormTest()
+    {
+        var tierdParallelForm = tierdParallelGraph.GetTieredParallelForm();
+        Assert.AreEqual(4, tierdParallelForm.Count());
+
+        Assert.IsTrue(tierdParallelForm[0].Contains(2));
+        Assert.IsTrue(tierdParallelForm[0].Contains(7));
+
+        Assert.IsTrue(tierdParallelForm[1].Contains(3));
+        Assert.IsTrue(tierdParallelForm[1].Contains(4));
+
+        Assert.IsTrue(tierdParallelForm[2].Contains(0));
+
+        Assert.IsTrue(tierdParallelForm[3].Contains(1));
+        Assert.IsTrue(tierdParallelForm[3].Contains(5));
+        Assert.IsTrue(tierdParallelForm[3].Contains(6));
+
+    }
+    [TestMethod]
+    public void StronglyConnectedComponentTest()
+    {
+        var stronglyConnectedComponent = stronglyConnectedGraph.GetStronglyСonnectedСomponent();
+        Assert.AreEqual(3, stronglyConnectedComponent.Count());
+
+        Assert.IsTrue(stronglyConnectedComponent[0].Contains(0));
+
+        Assert.IsTrue(stronglyConnectedComponent[1].Contains(1));
+        Assert.IsTrue(stronglyConnectedComponent[1].Contains(2));
+        Assert.IsTrue(stronglyConnectedComponent[1].Contains(3));
+
+        Assert.IsTrue(stronglyConnectedComponent[2].Contains(4));
+    }
+    [TestMethod]
+    public void StronglyConnectedMatrixTest()
+    {
+        var stronglyConnectedMatrix = stronglyConnectedGraph.GetStronglyConnectedComponentMatrix();
+        Assert.AreEqual(1, stronglyConnectedMatrix[0, 0]);
+
+        for(int i = 1; i < 4; ++i)
+            for(int j = 1; j < 4; ++j)
+                Assert.AreEqual(1, stronglyConnectedMatrix[i, j]);
+
+        Assert.AreEqual(1, stronglyConnectedMatrix[4, 4]);
+        int sum = 0;
+        foreach(var item in stronglyConnectedMatrix)
+            sum += item;
+        Assert.AreEqual(11, sum);    
     }
 }
