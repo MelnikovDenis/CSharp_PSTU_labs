@@ -4,22 +4,40 @@ public class Graph
       //строки (откуда) - нулевой индекс
       //столбцы (куда) - первый индекс
       public int[,] Matr {get; set;} //матрица
-      public char[] Names { get; set; } //имена вершин
+      public char[] Names { get; set; } = new char[]{'a', 'b', 'c', 'd', 'e', 'f', 'g'}; //имена вершин
       //кол-во вершин графа
       public int Count {get{
             return Matr.GetLength(0);
       }}
       public Graph(int[,] Matr)
       {
-            this.Matr = Matr;
+            if(Matr.GetLength(0) == Matr.GetLength(1))
+                  this.Matr = Matr;
+             else
+                  throw new ArgumentException("Длина измерений матрицы смежности должна быть одинаковой");
       }  
       public Graph(int[,] Matr, char[] Names) :this(Matr){
-            if(Matr.GetLength(0) == Matr.GetLength(1) && Matr.GetLength(0) == Names.Length){                  
+            if(Matr.GetLength(0) == Names.Length){                  
                   this.Names = Names;
             }                  
             else
-                  throw new ArgumentException("Длина измерений матрицы смежности должна быть одинаковой и равняться длине массива имён");
-      }          
+                  throw new ArgumentException("Длина измерений матрицы смежности должна равняться длине массива имён");
+      }
+      public bool isWeighted()
+      {
+            foreach(var item in Matr)
+                  if(item > 1)
+                        return true;
+            return false;
+      }
+      public bool isNonOrientied()
+      {
+            for(int i = 0; i < Count; ++i)
+                  for(int j = 0; j < Count; ++j)
+                        if(i != j && Matr[i, j] != Matr[j, i])
+                              return false;
+            return true;
+      }
       //поиск остова по краскалу
       public List<(int, int)> Kruskal()
       {
@@ -94,7 +112,7 @@ public class Graph
             }
       }
       //поэлементное логическое сложение матриц
-      private static int[,] BooleanMatrixOR(int[,] firstMatrix, int[,] secondMatrix){
+      private static int[,] MatrixOR(int[,] firstMatrix, int[,] secondMatrix){
             if(firstMatrix.GetLength(0) == secondMatrix.GetLength(0) && firstMatrix.GetLength(1) == secondMatrix.GetLength(1)){
                   int[,] resultMatrix = new int[firstMatrix.GetLength(0), secondMatrix.GetLength(1)];
                   for(int i = 0; i < resultMatrix.GetLength(0); ++i){
@@ -110,7 +128,7 @@ public class Graph
       }
 
       //поэлементное логическое умножение матриц
-      private static int[,] BooleanMatrixAND(int[,] firstMatrix, int[,] secondMatrix){
+      private static int[,] MatrixAND(int[,] firstMatrix, int[,] secondMatrix){
             if(firstMatrix.GetLength(0) == secondMatrix.GetLength(0) && firstMatrix.GetLength(1) == secondMatrix.GetLength(1)){
                   int[,] resultMatrix = new int[firstMatrix.GetLength(0), secondMatrix.GetLength(1)];
                   for(int i = 0; i < resultMatrix.GetLength(0); ++i){
@@ -124,8 +142,8 @@ public class Graph
                   throw new ArgumentException("Размерности матриц не совпадают, логическое умножение невозможно");
             }
       }
-      //получение единичной логической матрицы
-      private int[,] GetIdentityBooleanMatrix(){
+      //получение единичной матрицы
+      private int[,] GetIdentityMatrix(){
             int[,] resultMatrix = new int[Count, Count];
             for(int i = 0; i < Count; ++i){
                   resultMatrix[i, i] = 1;
@@ -133,14 +151,14 @@ public class Graph
             return resultMatrix;
       }
       //устанавливает значение 0 для всех ячеек в определённом столбце и строчке
-      private static void SetFalseOnRowAndColumn(int[,] matrix, int rowAndColumn){
+      private static void SetZeroOnRowAndColumn(int[,] matrix, int rowAndColumn){
             for(int i = 0; i < matrix.GetLength(1); ++i){
                   matrix[rowAndColumn, i] = 0;
                   matrix[i, rowAndColumn] = 0;
             }
       }
       //проверяет есть ли в столбце хотя бы одно значение >0
-      private static bool ContainsTrueInColumn(int[,] matrix, int column){
+      private static bool ContainsPathInColumn(int[,] matrix, int column){
             for(int i = 0; i < matrix.GetLength(0); ++i){
                   if(matrix[i, column] > 0)
                         return true;
@@ -162,13 +180,13 @@ public class Graph
                   //перебираем оставшиеся необработанные столбцы                                     
                   foreach(var i in unprocessed){
                         //если в столбце нет true
-                        if(!ContainsTrueInColumn(adjacencyMatrixCopy, i)){
+                        if(!ContainsPathInColumn(adjacencyMatrixCopy, i)){
                               tier.Add(i); //добавляем вершины в ярус
                         }  
                   }
                   //перебираем обработанные вершины в ярусе
                   foreach(var i in tier){
-                        SetFalseOnRowAndColumn(adjacencyMatrixCopy, i); //зануляем обработанные столбцы и строки
+                        SetZeroOnRowAndColumn(adjacencyMatrixCopy, i); //зануляем обработанные столбцы и строки
                         unprocessed.Remove(i); //удаляем из списка те столбцы, что обработали
                   }
                   if(tier.Count == 0 && unprocessed.Count > 0){
@@ -180,11 +198,11 @@ public class Graph
       }
       //получить матрицу компонентов сильной связности
       public int[,] GetStronglyConnectedComponentMatrix(){
-            var strConnCompMatrix = GetIdentityBooleanMatrix(); //единичная матрица
+            var strConnCompMatrix = GetIdentityMatrix(); //единичная матрица
             foreach(var exp in GetBooleanMatrixExp()){
-                  strConnCompMatrix = BooleanMatrixOR(strConnCompMatrix, exp);
+                  strConnCompMatrix = MatrixOR(strConnCompMatrix, exp);
             } //получение суммы E^0 + E^1 + ... + E^Count = R
-            strConnCompMatrix = BooleanMatrixAND(strConnCompMatrix, Transpose(strConnCompMatrix)); //получение R & Transpose(R) = S
+            strConnCompMatrix = MatrixAND(strConnCompMatrix, Transpose(strConnCompMatrix)); //получение R & Transpose(R) = S
             return strConnCompMatrix;
       }
       //получить компноненты сильной связности
@@ -198,7 +216,7 @@ public class Graph
                               strConnComp.Add(j);                                                     
                   }
                   for(int j = 0; j < strConnComp.Count; ++j){
-                        SetFalseOnRowAndColumn(strConnCompMatrix, strConnComp[j]);
+                        SetZeroOnRowAndColumn(strConnCompMatrix, strConnComp[j]);
                   }                       
                   if(strConnComp.Count > 0)
                         StrConnComps.Add(strConnComp);
