@@ -23,6 +23,71 @@ public class Graph
             else
                   throw new ArgumentException("Длина измерений матрицы смежности должна равняться длине массива имён");
       }
+      //получаем соседей вершины
+      public HashSet<int> GetNeighbors(int vertex)
+      {
+            if(!isNonOrientied())
+                  throw new ArgumentException("Для получения соседей граф должен быть неориентированным");
+            var result = new HashSet<int>(Count);
+            for(int i = 0; i < Count; ++i)
+                  if(Matr[i, vertex] > 0 && i != vertex)                  
+                        result.Add(i);
+
+            return result;
+      }
+      //not НЕ содержит вершины, СОЕДИНЕННОЙ СО ВСЕМИ вершинами из candidates
+      public bool isNotConnectedToAll(HashSet<int> candidates, HashSet<int> not)
+      {
+            foreach(var vertex in not)
+                  if(candidates.Except(GetNeighbors(vertex)).Count() == 0)
+                        return false;
+            return true;
+      }
+      //удаляем из set вершины, НЕ СОЕДИНЕННЫЕ с v, и возвращаем новый set
+      public HashSet<int> DeleteNotConnected(HashSet<int> set, int v)
+      {
+            var new_set = set.Intersect(GetNeighbors(v)).ToHashSet();            
+            return new_set; 
+      }
+      public void Display(HashSet<int> set, string caption)
+      {
+            Console.Write($"{caption}: ");
+            foreach(var i in set)
+            {
+                  Console.Write($"{i} ");
+            }
+            Console.WriteLine();
+      }
+      public List<HashSet<int>> BronKerbosh()
+      {
+            var result = new List<HashSet<int>>(Count);
+            var compsub = new HashSet<int>(Count);
+            var candidates = new HashSet<int>(Count);
+            for(int i = 0; i < Count; ++i)
+                  candidates.Add(i);
+            var not = new HashSet<int>(Count);
+            void extend(HashSet<int> candidates, HashSet<int> not)
+            {                 
+                  while(candidates.Count() > 0 && isNotConnectedToAll(candidates, not))
+                  { 
+                        int v = candidates.First();
+                        compsub.Add(v);                   
+                        var new_candidates = DeleteNotConnected(candidates, v);
+                        var new_not = DeleteNotConnected(not, v);
+                        if(new_candidates.Count() == 0 && new_not.Count() == 0)
+                              result.Add(new HashSet<int>(compsub.ToArray())); 
+                                                                                
+                        else
+                              extend(new_candidates, new_not);
+                        not.Add(v);
+                        compsub.Remove(v);
+                        candidates.Remove(v);
+                  }
+            }
+            extend(candidates, not);
+            return result;
+      }
+      //проверка графа на взвешенность
       public bool isWeighted()
       {
             foreach(var item in Matr)
@@ -30,6 +95,7 @@ public class Graph
                         return true;
             return false;
       }
+      //проверка графа на ориентированность
       public bool isNonOrientied()
       {
             for(int i = 0; i < Count; ++i)
@@ -224,7 +290,7 @@ public class Graph
             return StrConnComps;
       }
       //итератор для степеней матрицы
-      public IEnumerable<int[,]> GetBooleanMatrixExp(){
+      private IEnumerable<int[,]> GetBooleanMatrixExp(){
             var expMatrix = Matr;
             for(int i = 0; i < Count; ++i){
                   yield return expMatrix;

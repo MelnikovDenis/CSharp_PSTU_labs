@@ -36,6 +36,14 @@ public class GraphTest
         {0, 0, 1, 0, 0},
         {1, 0, 1, 1, 0}
     });
+    Graph cliqueGraph = new Graph(new int[,]
+    {
+        {0, 1, 0, 0, 0},
+        {1, 0, 1, 1, 0},
+        {0, 1, 0, 1, 1},
+        {0, 1, 1, 0, 0},
+        {0, 0, 1, 0, 0}
+    });
     [TestMethod]
     public void KruskalTest()
     {
@@ -96,5 +104,39 @@ public class GraphTest
         foreach(var item in stronglyConnectedMatrix)
             sum += item;
         Assert.AreEqual(11, sum);    
+    }
+    [TestMethod]
+    public void NeighborsTest()
+    {
+        var neighbors1 = cliqueGraph.GetNeighbors(1);
+        Assert.AreEqual(3, neighbors1.Count());
+        Assert.IsTrue(neighbors1.Contains(0));
+        Assert.IsTrue(neighbors1.Contains(2));
+        Assert.IsTrue(neighbors1.Contains(3));
+    }
+    [TestMethod]
+    public void DeleteNotConnectedTest()
+    {
+        var set = new HashSet<int>(cliqueGraph.Count);
+        for(int i = 0; i < cliqueGraph.Count; ++i)
+            set.Add(i);
+        var new_set = cliqueGraph.DeleteNotConnected(set, 1);
+        Assert.AreEqual(3, new_set.Count());
+        Assert.IsTrue(new_set.Contains(0));
+        Assert.IsTrue(new_set.Contains(2));
+        Assert.IsTrue(new_set.Contains(3));
+    }
+   
+    
+    [TestMethod]
+    public void IsNotConnectedToAllTest()
+    {
+        //not НЕ содержит вершины, СОЕДИНЕННОЙ СО ВСЕМИ вершинами из candidates
+        var candidates = new HashSet<int>();
+        candidates.Add(1);
+        candidates.Add(3);
+        var not = new HashSet<int>();
+        not.Add(2);
+        Assert.IsFalse(cliqueGraph.isNotConnectedToAll(candidates, not));
     }
 }

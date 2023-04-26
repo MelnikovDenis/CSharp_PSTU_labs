@@ -17,14 +17,12 @@ internal static class UserInterface{
             bool needExit = false;
             var graph = new Graph(new int[,]
             {
-                  {0, 10, 0, 5, 0, 6, 0},
-                  {10, 0, 6, 1, 4, 0, 5},
-                  {0, 6, 0, 3, 1, 2, 0},
-                  {5, 1, 3, 0, 3, 0, 5},
-                  {0, 4, 1, 3, 0, 4, 2},                                                    
-                  {6, 0, 2, 0, 4, 0, 0},
-                  {0, 5, 0, 5, 2, 0, 0}
-            }, new char[]{'a', 'b', 'c', 'd', 'e', 'f', 'g'});
+                  {0, 1, 0, 0, 0},
+                  {1, 0, 1, 1, 0},
+                  {0, 1, 0, 1, 1},
+                  {0, 1, 1, 0, 0},
+                  {0, 0, 1, 0, 0}
+            }, new char[]{'a', 'b', 'c', 'd', 'e'});
             while (!needExit)
             {
                   Console.Clear();
@@ -47,7 +45,7 @@ internal static class UserInterface{
                               DisplaySpanningTree(graph);
                               break;  
                         case 5:
-                              
+                              DisplayCliques(graph);
                               break;                      
                         case 0:
                               needExit = true;
@@ -56,6 +54,33 @@ internal static class UserInterface{
                   ColorDisplay("Нажмите любую клавишу для продолжения...", ConsoleColor.Yellow);
                   Console.ReadKey();
             }
+      }
+      //вывод клик
+      static void DisplayCliques(Graph graph)
+      {
+            try{
+                  var cliques = graph.BronKerbosh();
+                  if(cliques.Count() > 0)
+                  {
+                        var sorted_cluques = from clique in cliques orderby clique.Count() descending select clique;
+                        ColorDisplay("Клики:\n", ConsoleColor.Magenta);
+                        foreach(var clique in sorted_cluques)
+                        {
+                              Console.Write($"Размер: {clique.Count()}, {{ ");
+                              foreach(var vertex in clique)
+                              {
+                                    Console.Write($"{graph.Names[vertex]} ");
+                              }
+                              Console.WriteLine("}");
+                        }
+                  }
+                  else
+                        throw new ArgumentException("У данного графа нет клик");
+            }
+            catch(Exception ex){
+                  ColorDisplay(ex.Message + '\n', ConsoleColor.Red);
+            }
+            
       }
       //вывод ярусно-параллельной формы графа
       static void DisplayTieredParallelForm(Graph graph){
@@ -93,7 +118,7 @@ internal static class UserInterface{
       }
       static void DisplaySpanningTree(Graph graph)
       {
-            if(graph.isNonOrientied() && graph.isWeighted())
+            if(graph.isNonOrientied() && graph.isWeighted() &&  graph.GetStronglyСonnectedСomponent().Count == 1)
             {
                   var kruskal = graph.Kruskal();
                   ColorDisplay("Минимальный остов графа:\n", ConsoleColor.Magenta);
@@ -106,7 +131,7 @@ internal static class UserInterface{
                   ColorDisplay($"Длина минимального остова: {sum}\n", ConsoleColor.Magenta);
             }
             else
-                  ColorDisplay("Минимальный остов по методу Краскала можно найти только у неориентированного и взвешенного графа\n", ConsoleColor.Red);
+                  ColorDisplay("Минимальный остов по методу Краскала можно найти только у связного, неориентированного и взвешенного графа\n", ConsoleColor.Red);
       }
       //ввод графа      
       static Graph InputGraph()
@@ -157,7 +182,7 @@ internal static class UserInterface{
                   if(isWeighted)
                   {
                         for(int i = 0; i < len; ++i){
-                              for(int j = i + 1; j < len - 1; ++j){
+                              for(int j = i + 1; j < len; ++j){
                                     if(i != j)
                                           adjacencyMatrix[i, j] = GetInt($"Длина пути из вершины '{names[i]}' в '{names[j]}': ", 
                                                 $"Введите целое число > 0, если дорога есть, и '0', если - нет, повторите ввод =>\n",
