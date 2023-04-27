@@ -1,7 +1,7 @@
 namespace Lab14Test;
 
 [TestClass]
-public class UnitTest1
+public class MyEventListExtensionTest
 {
     [TestMethod]
     public void TestMethod1()
