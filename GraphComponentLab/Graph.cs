@@ -43,42 +43,41 @@ public class Graph
                         return false;
             return true;
       }
-      //удаляем из set вершины, НЕ СОЕДИНЕННЫЕ с v, и возвращаем новый set
+      //возвращаем new_set, созданный на основе set, но без вершин НЕ СОЕДИНЕННЫХ с v
       public HashSet<int> DeleteNotConnected(HashSet<int> set, int v)
       {
             var new_set = set.Intersect(GetNeighbors(v)).ToHashSet();            
             return new_set; 
       }
-      public void Display(HashSet<int> set, string caption)
-      {
-            Console.Write($"{caption}: ");
-            foreach(var i in set)
-            {
-                  Console.Write($"{i} ");
-            }
-            Console.WriteLine();
-      }
+      //метод поиска всех клик по алгоритму Брона-Кербоша
       public List<HashSet<int>> BronKerbosh()
       {
-            var result = new List<HashSet<int>>(Count);
-            var compsub = new HashSet<int>(Count);
-            var candidates = new HashSet<int>(Count);
+            var result = new List<HashSet<int>>(Count); //список всех клик
+            var compsub = new HashSet<int>(Count); //клика
+            var candidates = new HashSet<int>(Count); //вершины пригодные для рассмотрения
             for(int i = 0; i < Count; ++i)
                   candidates.Add(i);
-            var not = new HashSet<int>(Count);
+            var not = new HashSet<int>(Count); //исключенные из рассмотрения вершины
             void extend(HashSet<int> candidates, HashSet<int> not)
             {                 
+                  //ПОКА candidates НЕ пусто И not НЕ содержит вершины, СОЕДИНЕННОЙ СО ВСЕМИ вершинами из candidates, 
                   while(candidates.Count() > 0 && isNotConnectedToAll(candidates, not))
                   { 
+                        //Выбираем вершину v из candidates и добавляем ее в compsub
                         int v = candidates.First();
-                        compsub.Add(v);                   
+                        compsub.Add(v);
+                        //Формируем new_candidates и new_not, путём удаления из candidates и not вершин, НЕ СОЕДИНЕННЫХ с v     
                         var new_candidates = DeleteNotConnected(candidates, v);
                         var new_not = DeleteNotConnected(not, v);
+                        //ЕСЛИ new_candidates и new_not пусты
                         if(new_candidates.Count() == 0 && new_not.Count() == 0)
+                              //ТО compsub – клика
                               result.Add(new HashSet<int>(compsub.ToArray())); 
                                                                                 
                         else
+                              //ИНАЧЕ рекурсивно вызываем extend(new_candidates, new_not)
                               extend(new_candidates, new_not);
+                        //Удаляем v из compsub и candidates и помещаем в not
                         not.Add(v);
                         compsub.Remove(v);
                         candidates.Remove(v);
@@ -116,9 +115,9 @@ public class Graph
             var sortedEdges = from edge in edges orderby Matr[edge.Item1, edge.Item2] select edge; //сортируем все рёбра по длине            
             foreach(var edge in sortedEdges)
             {        
-                  resultEdges.Add(edge);          
-                  if(HaveCycle(resultEdges))
-                        resultEdges.Remove(edge);                  
+                  resultEdges.Add(edge); //добавляем ребро
+                  if(HaveCycle(resultEdges)) //если теперь рёбра образуют цикл
+                        resultEdges.Remove(edge); //удаляем добавленное ребро
                   //рёбер на 1 меньше чем вершин
                   if(resultEdges.Count == Count - 1)
                         break;
@@ -245,9 +244,9 @@ public class Graph
                   var tier = new List<int>(); //список вершин в текущем ярусе
                   //перебираем оставшиеся необработанные столбцы                                     
                   foreach(var i in unprocessed){
-                        //если в столбце нет true
+                        //если в столбце нет пути
                         if(!ContainsPathInColumn(adjacencyMatrixCopy, i)){
-                              tier.Add(i); //добавляем вершины в ярус
+                              tier.Add(i); //добавляем вершину в ярус
                         }  
                   }
                   //перебираем обработанные вершины в ярусе

@@ -1,4 +1,5 @@
 using System.Text;
+using static UtilityLibraries.ConsoleIOLibrary;
 namespace GraphComponentLab;
 internal static class UserInterface{
       const int MAX_LENGTH = 10; //максимальное кол-во вершин графа
@@ -116,6 +117,7 @@ internal static class UserInterface{
             else
                   ColorDisplay("Компоненты сильной связности можно найти только у ориентированного графа!\n", ConsoleColor.Red);
       }
+      //вывод остова
       static void DisplaySpanningTree(Graph graph)
       {
             if(graph.isNonOrientied() && graph.isWeighted() &&  graph.GetStronglyСonnectedСomponent().Count == 1)
@@ -205,41 +207,6 @@ internal static class UserInterface{
                   }
             }
             return new Graph(adjacencyMatrix, names);
-      }
-      //ввод целого числа с консоли с обработкой ошибок
-      static int GetInt(string inputMessage, string errorMessage, Predicate<int> condition)
-      {
-            int result;
-            bool isCorrect;
-            do
-            {
-                  Console.Write(inputMessage);
-                  isCorrect = int.TryParse(Console.ReadLine(), out result) && condition(result);
-                  if (!isCorrect)
-                        ColorDisplay(errorMessage, ConsoleColor.Red);
-            } while (!isCorrect);
-            return result;
-      }
-      //ввод символа с консоли с обработкой ошибок
-      static char GetChar(string inputMessage, string errorMessage, Predicate<char> condition)
-      {
-            char result;
-            bool isCorrect;
-            do
-            {
-                  Console.Write(inputMessage);
-                  isCorrect = char.TryParse(Console.ReadLine(), out result) && condition(result);
-                  if (!isCorrect)
-                        ColorDisplay(errorMessage, ConsoleColor.Red);
-            } while (!isCorrect);
-            return result;
-      }
-      //цветной вывод текста в консоль
-      static void ColorDisplay(string message, ConsoleColor color)
-      {
-            Console.ForegroundColor = color;
-            Console.Write(message);
-            Console.ForegroundColor = ConsoleColor.Gray;
       }
       //вывод матрицы в консоль
       static void DisplayMatrix(int[,] matrix, char[] names, string caption){
