@@ -128,7 +128,7 @@ namespace Lab12Test
 				Assert.Fail("Цикл foreach с 0 элементов запустился (не должен был)");
 			}
 		}
-		//тест AddTo()
+		//тест AddTo() - добавления на определённую позицию
 		[TestMethod]
 		public void AddToTest()
 		{
@@ -147,6 +147,95 @@ namespace Lab12Test
 			}
 			Assert.AreEqual<int>(21, sum);
 		}
-	}
+		//тест Add(), но добавляется null
+		[TestMethod]
+		public void AddNullTest()		
+		{
+			var nums = new MyLinkedList<int?>();
+			int num = 1, sum = 0, nullCount = 0;
+			nums.Add(null);
+			nums.Add(2);
+			nums.Add(3);
+			nums.Add(null);
+			nums.Add(5);
+			nums.Add(null);
+			foreach(var item in nums){
+				if(item is not null)
+				{
+					sum += num; 
+					Assert.AreEqual<int?>(num, item);
+				}
+				else
+					++nullCount;
+				++num;				          				
+			}
+			Assert.AreEqual<int>(10, sum);
+			Assert.AreEqual<int>(3, nullCount);
+		}
+		//тест AddTo(), но добавляется null
+		[TestMethod]
+		public void AddToNullTest()
+		{
+			MyLinkedList<int?> nums = new MyLinkedList<int?>();
+			int num = 1, sum = 0, nullCount = 0;
+			nums.AddTo(1, 0);
+			nums.Add(null);
+			nums.Add(5);
+			nums.AddTo(2, 1);
+			nums.AddTo(null, 3);
+			nums.AddTo(6, 5);
+			foreach(var item in nums){
+				if(item is not null)
+				{
+					sum += num; 
+					Assert.AreEqual<int?>(num, item);
+				}
+				else
+					++nullCount;
+				++num;				          				
+			}
+			Assert.AreEqual<int>(14, sum);
+			Assert.AreEqual<int>(2, nullCount);
+		}
+		//тест Remove и Contains, но с null
+		[TestMethod]
+		public void RemoveAndContainsNullTest()
+		{
+			MyLinkedList<int?> nums = new MyLinkedList<int?>();
+			nums.AddTo(1, 0);
+			nums.Add(null);
+			nums.Add(5);
+			nums.AddTo(2, 1);
+			nums.AddTo(null, 3);
+			nums.AddTo(6, 5);
+			Assert.IsTrue(nums.Contains(null));
+			Assert.IsTrue(nums.Remove(null));		
+			Assert.IsTrue(nums.Contains(null));
+			Assert.IsTrue(nums.Remove(null));
+			Assert.IsFalse(nums.Contains(null));
+		}
+		//тест Clone
+		[TestMethod]
+		public void CloneTest()
+		{
+			MyLinkedList<int?> nums = new MyLinkedList<int?>();
+			nums.AddTo(1, 0);
+			nums.Add(null);
+			nums.Add(5);
+			nums.AddTo(2, 1);
+			nums.AddTo(null, 3);
+			nums.AddTo(6, 5);
+			var clone = (MyLinkedList<int?>)nums.Clone();
+			Assert.AreEqual<int>(nums.Count, clone.Count);
+			foreach(var tuple in nums.Zip(clone, Tuple.Create))
+			{
+				if(tuple.Item1 is not null && tuple.Item2 is not null)
+				{
+					Assert.AreEqual<int?>(tuple.Item1, tuple.Item2);
+				}
+			}			
+		}
+		
+	}	
 }
 

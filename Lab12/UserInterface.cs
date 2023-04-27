@@ -16,10 +16,10 @@ public static class UserInterface
         {                
             ColorDisplay("Номера команд:\n1. Сгенерировать и вывести новый связный список\n2. Добавить элемент\n3. Удалить элемент" +
             "\n4. Очистить список\n5. Проверить наличие элемента в списке\n6. Добавить элементы на все нечётные позиции" +
-            "\n7. Поверхностное копирвоание с помощью CopyTo()\n0. Выход\n", ConsoleColor.Green);
+            "\n7. Поверхностное копирование с помощью CopyTo()\n8. Глубокое копирование с помощью ICloneable\n0. Выход\n", ConsoleColor.Green);
             ColorDisplay("Исходный список:\n", ConsoleColor.Magenta);
             Display(myLinkedList);
-            int command = GetInt("Введите номер команды: ", "Несуществующая команда, повторите ввод =>\n", (int num) => num >= 0 && num <= 7);                
+            int command = GetInt("Введите номер команды: ", "Несуществующая команда, повторите ввод =>\n", (int num) => num >= 0 && num <= 8);                
             Console.Clear();
             ColorDisplay("Исходный список:\n", ConsoleColor.Magenta);
             Display(myLinkedList);
@@ -56,7 +56,7 @@ public static class UserInterface
                 case 7:
                     Person[] array = new Person[myLinkedList.Count];
                     myLinkedList.CopyTo(array, 0);
-                        ColorDisplay("Поверхнстная копия (массив):\n", ConsoleColor.Magenta);
+                    ColorDisplay("Поверхнстная копия (массив):\n", ConsoleColor.Magenta);
                     if(array.Length > 0){
                         int counter = 0;
                         foreach(var person in array){
@@ -66,6 +66,17 @@ public static class UserInterface
                     else{
                         ColorDisplay("Массив пуст!\n", ConsoleColor.Red);
                     }
+                    break;
+                case 8:
+                    var clone = (MyLinkedList<Person>)myLinkedList.Clone();
+                    ColorDisplay("Глубокая копия:\n", ConsoleColor.Magenta);
+                    Display(clone);
+                    ColorDisplay("Исходный список после очищения:\n", ConsoleColor.Magenta);
+                    myLinkedList.Clear();
+                    Display(myLinkedList);
+                    ColorDisplay("Глубокая копия:\n", ConsoleColor.Magenta);
+                    Display(clone);
+                    myLinkedList = (MyLinkedList<Person>)clone.Clone();
                     break;
                 case 0:
                     needExit = true;                        

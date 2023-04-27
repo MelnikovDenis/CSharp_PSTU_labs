@@ -1,6 +1,6 @@
 using System.Collections;
 namespace Lab12;
-public class MyLinkedList<T> : IEnumerable<T>, ICollection<T>
+public class MyLinkedList<T> : IEnumerable<T>, ICollection<T>, ICloneable
 {
       //класс перечислителя (энумератор)
       protected class MyLinkedListEnumerator : IEnumerator<T>
@@ -50,7 +50,7 @@ public class MyLinkedList<T> : IEnumerable<T>, ICollection<T>
             {
                   currentNode = null;
             }
-            //метод для удаления неуправляемых ресурсов перечислителя
+            //метод для удаления неуправляемых ресурсов перечислителя (их нет, так что метод пустой)
             public void Dispose() { }
       }
       //класс узлов связного списка
@@ -71,16 +71,48 @@ public class MyLinkedList<T> : IEnumerable<T>, ICollection<T>
 
       protected Node? StartNode { get; set; } = null; //стартовый узел
       public int Count { get; protected set; } = 0; //кол-во узлов
-      public bool IsReadOnly { get; private set; } = false;
+      public bool IsReadOnly { get; } = false;
       public MyLinkedList()
       {
       }
+      public MyLinkedList(IEnumerable<T> enumerable)
+      {
+            foreach(var item in enumerable)
+            {
+                  Add(item);
+            }
+      }
+      public object Clone()
+      {
+            var clone = new MyLinkedList<T>();
+            if(Count > 0)
+            {
+                  if(this.First() is ICloneable)
+                  {
+                        foreach(var item in this)
+                        {
+                              if(item is not null)
+                                    clone.Add((T)((ICloneable)item).Clone());
+                              else
+                                    clone.Add(item);
+                        }
+                  }
+                  else
+                  {
+                        foreach(var item in this)
+                        {
+                              clone.Add(item);
+                        }
+                  }
+            }           
+            return clone;
+      }
       public virtual void Add(T Data)
       {
-            if (Data is null)
+            /*if (Data is null)
             {
                   throw new NullReferenceException("Нельзя добавить в связный список null");
-            }
+            }*/
             Node? newNode = new Node(Data);
             if (StartNode is null)
             {
@@ -108,7 +140,7 @@ public class MyLinkedList<T> : IEnumerable<T>, ICollection<T>
             {
                   foreach (var obj in this)
                   {
-                        if (item is null)
+                        if (obj is null)
                         {
                               return true;
                         }
@@ -159,7 +191,7 @@ public class MyLinkedList<T> : IEnumerable<T>, ICollection<T>
                   {
                         if (Count != 1)
                         {
-                              if (StartNode!.Data!.Equals(item))
+                              if (StartNode!.Data is null)
                               {
                                     StartNode = StartNode.NextNode;
                               }
