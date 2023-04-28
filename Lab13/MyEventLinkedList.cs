@@ -16,6 +16,9 @@ public class MyEventLinkedList<T> : MyExtendedLinkedList<T>{
       public MyEventLinkedList(string Name) : base(Name){
             
       }
+      public MyEventLinkedList(IEnumerable<T> enumerable, string Name) : base(enumerable, Name){
+            
+      }
       public override void Add(T Data){
             CountChanged?.Invoke(new MyLinkedListHandlerEventArgs(this, Name, MyLinkedListHandlerEventArgs.ChangeTypes[0], Data));
             base.Add(Data);

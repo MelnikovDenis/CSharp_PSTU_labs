@@ -9,7 +9,7 @@ namespace Lab14Test;
 [TestClass]
 public class DictStackExtensionTest
 {
-    public static Dictionary<string, Stack<Person>> company = GetCompany();
+    private static Dictionary<string, Stack<Person>> company = GetCompany();
     [TestMethod]
     public void GetMatchesTest()
     {
@@ -41,7 +41,7 @@ public class DictStackExtensionTest
         var avWorkLength = company.GetAverageOfWorkLength();
         Assert.AreEqual<double>(4d, avWorkLength);
     }
-    public static Dictionary<string, Stack<Person>>GetCompany()
+    private static Dictionary<string, Stack<Person>>GetCompany()
     {
         var company = new Dictionary<string, Stack<Person>>();
         company.Add(Administrator.departments[0], new Stack<Person>());

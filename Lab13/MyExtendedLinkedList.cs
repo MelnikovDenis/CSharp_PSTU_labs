@@ -29,7 +29,10 @@ public class MyExtendedLinkedList<T> : MyLinkedList<T>{
                   }
             }
       }
-      public MyExtendedLinkedList(string Name){
+      public MyExtendedLinkedList(string Name):base(){
+            this.Name = Name;
+      }
+      public MyExtendedLinkedList(IEnumerable<T> enumerable, string Name):base(enumerable){
             this.Name = Name;
       }
       public virtual bool RemoveFrom(int index){

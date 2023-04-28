@@ -18,6 +18,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Lab14\Lab14.csproj" />
     <ProjectReference Include="..\UtilityLibraries\UtilityLibraries.csproj" />
+    <ProjectReference Include="..\Lab13\Lab13.csproj" />
   </ItemGroup>
 
 </Project>
