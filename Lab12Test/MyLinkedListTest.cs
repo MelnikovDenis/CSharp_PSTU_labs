@@ -235,7 +235,18 @@ namespace Lab12Test
 				}
 			}			
 		}
-		
+		[TestMethod]
+		public void RemoveTest()
+		{
+			MyLinkedList<Person> persons = new MyLinkedList<Person>();
+			persons.Add(new Person("Денис", "Мельников", "Вячеславович"));
+			persons.Remove(new Person("Денис", "Мельников", "Вячеславович"));
+			Assert.AreEqual(new Person("Денис", "Мельников", "Вячеславович"), new Person("Денис", "Мельников", "Вячеславович"));
+			Assert.AreEqual(new Person("Денис", "Мельников", "Вячеславович"), new Engineer("Денис", "Мельников", "Вячеславович", 15, 16, "0"));
+			Assert.AreEqual<Person>(new Person("Денис", "Мельников", "Вячеславович"), new Person("Денис", "Мельников", "Вячеславович"));
+			Assert.AreEqual<Person>(new Person("Денис", "Мельников", "Вячеславович"), new Engineer("Денис", "Мельников", "Вячеславович", 15, 16, "0"));
+			Assert.AreEqual(0, persons.Count());
+		}
 	}	
 }
 

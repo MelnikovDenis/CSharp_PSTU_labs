@@ -36,7 +36,9 @@ public static class UserInterface
                     Display(myLinkedList);
                     break;
                 case 3:
-                    Console.WriteLine("Введённый элемент удалён: " + myLinkedList.Remove(Person.InputPerson()));
+                    var toRemove = Person.InputPerson();
+                    Console.WriteLine($"Объект для удаления: {toRemove}");
+                    Console.WriteLine("Введённый элемент удалён: " + myLinkedList.Remove(toRemove));
                     ColorDisplay("Список после удаления элемента:\n", ConsoleColor.Magenta);
                     Display(myLinkedList);
                     break;

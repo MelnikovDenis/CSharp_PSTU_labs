@@ -109,10 +109,6 @@ public class MyLinkedList<T> : IEnumerable<T>, ICollection<T>, ICloneable
       }
       public virtual void Add(T Data)
       {
-            /*if (Data is null)
-            {
-                  throw new NullReferenceException("Нельзя добавить в связный список null");
-            }*/
             Node? newNode = new Node(Data);
             if (StartNode is null)
             {
