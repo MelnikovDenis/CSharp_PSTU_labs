@@ -52,7 +52,7 @@ namespace Lab15
             }
         }    
         public static readonly DependencyProperty RangeToProperty = DependencyProperty.Register(
-        "RangeTo", typeof(double), typeof(MainWindow), new PropertyMetadata(50d));
+        "RangeTo", typeof(double), typeof(MainWindow), new PropertyMetadata(5d));
         /// <summary>
         /// Диапозон значений
         /// </summary>

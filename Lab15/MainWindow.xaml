@@ -43,7 +43,7 @@
                   X2="{Binding RelativeSource={RelativeSource Self}, Path=X1}"
                   Y2="{Binding ElementName=canvas, Path=ActualHeight}"
                   Stroke="Black" 
-                  StrokeThickness="3" 
+                  StrokeThickness="2" 
                   />
             <!--Ось X-->
             <Line X1="0"
@@ -51,11 +51,11 @@
                   X2="{Binding ElementName=canvas, Path=ActualWidth}"
                   Y2="{Binding RelativeSource={RelativeSource Self}, Path=Y1}"
                   Stroke="Black" 
-                  StrokeThickness="3" 
+                  StrokeThickness="2" 
                   />
             <!--График-->
             <Path Stroke="Red"
-                  StrokeThickness="3">
+                  StrokeThickness="1">
                 <Path.Data>
                     <MultiBinding Converter="{StaticResource PointsToPath}">
                         <Binding Path="Points"/>

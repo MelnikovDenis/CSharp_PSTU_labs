@@ -33,8 +33,11 @@ namespace Lab15
             var scaleX = w / rangeX; //масштаб по X
             
             var scaleY = h / rangeY; //масштаб по Y
-            
-            points = points.Select(p => new Point(p.X * scaleX, p.Y * scaleY)); //пересчёт точек
+            scaleX = scaleY = 1;
+
+            points = from point in points 
+                     where (Math.Abs(point.X * scaleX) < (w / 2)) && (Math.Abs(point.Y * scaleY * -1) < (h / 2)) 
+                     select new Point(point.X * scaleX, point.Y * scaleY * -1); //пересчёт точек
             
             ps.Add(new PolyLineSegment(points, true)); //по точкам добавляем сегменты пути
             
