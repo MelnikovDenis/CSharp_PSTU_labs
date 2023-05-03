@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics.Metrics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -27,16 +29,23 @@ namespace Lab15
             InitializeComponent();           
             this.DataContext = graph;
         }
-        private void Start_Button_Click(object sender, RoutedEventArgs e)
+        private async void Start_Button_Click(object sender, RoutedEventArgs e)
         {
-            List<Point> points = new List<Point>();
-            
-            for(double x = graph.RangeTo * -1; x <= graph.RangeTo; x += graph.Accuracy) 
+
+            double counter = 0d;
+            while (counter < graph.RangeTo) 
             {
-                points.Add(new Point(x, 23d * Math.Pow(x, 2) - 32));
+                List<Point> points = new List<Point>();
+                counter += 1d;
+                var calcTask = Task.Run(async () => {
+                    for (double x = counter * -1; x <= counter; x += graph.Accuracy)
+                        points.Add(new Point(x, 23d * Math.Pow(x, 2) - 32));
+                    await Task.Delay(100).ConfigureAwait(false);
+                });
+                await calcTask;
+                graph.Points = new ObservableCollection<Point>(points);
             }
             
-            graph.Points = new ObservableCollection<Point>(points);
         }
     }
 }
