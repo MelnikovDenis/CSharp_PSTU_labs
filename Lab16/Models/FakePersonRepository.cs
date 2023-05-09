@@ -1,48 +1,36 @@
-using Newtonsoft.Json.Linq;
+using Lab16.Models.SerializationModels;
 using UtilityLibraries;
 using Lab12;
 namespace Lab16.Models;
+//Псевдо БДы, которая сохраняет данные в json
 public class FakePersonRepository : IPersonRepository
 {
-    public MyLinkedList<Person> Persons { get; set;} = new MyLinkedList<Person>();
+    ICollectionSerializator Serializator {get; set;} = new JsonSerializator();
+    private MyLinkedList<Person> persons = new MyLinkedList<Person>();
+    public IEnumerable<Person> Persons 
+    { 
+        get
+        {
+            return persons.AsEnumerable<Person>();
+        }
+        set
+        {
+            persons = new MyLinkedList<Person>(value);
+        }
+    }
     
     public FakePersonRepository()
     {
-        string json;
-        using(var sr = new StreamReader("wwwroot/files/persons.json"))
-        {
-            json = sr.ReadToEnd();
-        }
-        dynamic jarray = JArray.Parse(json);
-        foreach(var item in jarray)
-        {
-            if(item.department is not null)
-            {
-                Persons.Add(new Administrator((string?)item.first_name, (string?)item.surname, 
-                    (string?)item.patronymic, (int)item.salary, (int)item.work_length, (string?)item.department));
-            }
-            else if(item.speciality is not null)
-            {
-                Persons.Add(new Engineer((string?)item.first_name, (string?)item.surname, (string?)item.patronymic, 
-                    (int)item.salary, (int)item.work_length, (string?)item.speciality));
-            }
-            else if(item.salary is not null && item.work_length is not null)
-            {
-                Persons.Add(new Employee((string?)item.first_name, (string?)item.surname, (string?)item.patronymic, 
-                    (int)item.salary, (int)item.work_length));
-            }
-            else
-            {
-                Persons.Add(new Person((string?)item.first_name, (string?)item.surname, (string?)item.patronymic));
-            }            
-        }
+        Persons = Serializator.DeserializeCollection("wwwroot/files/persons.json");
     }
     public void Add(Person newPerson)
     {
-        Persons.Add(newPerson);
+        persons.Add(newPerson);
+        Serializator.SerializeCollection(Persons, "wwwroot/files/persons.json");
     }
     public void Remove(Person toRemove)
     {
-        Persons.Remove(toRemove);
+        persons.Remove(toRemove);
+        Serializator.SerializeCollection(Persons, "wwwroot/files/persons.json");
     }
 }
