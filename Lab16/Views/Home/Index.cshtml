@@ -1,0 +1,73 @@
+@model ActionResponse
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width" charset="utf-8"/>
+        <link rel="stylesheet" href="~/css/style.css" type="text/css" />
+        <title>Lab16</title>
+    </head>
+    <body>
+        <div class="container">
+            <div class="collection">
+                <h2 class="collection_header">MyLinkedList</h2>
+                @{
+                    IEnumerable<Person>? Collection = (IEnumerable<Person>?)ViewData["Collection"];
+                }
+                @if(Collection is not null && Collection!.Count() > 0)
+                {
+                    @foreach (var item in Collection)
+                    {
+                        <div class="collection_item">
+                            Тип: @item.GetType()<br>
+                            ФИО: @item.surname @item.first_name @item.patronymic
+                            @if(item is Employee){
+                                <text><br>Зарплата: @(((Employee)item).salary.ToString("C2"))<br></text>
+                                <text>Стаж: @(((Employee)item).work_length)<br></text>
+                            }
+                            @if(item is Administrator){
+                                <text>Отдел: @(((Administrator)item).department)<br></text>
+                            }
+                            @if(item is Engineer){
+                                <text>Специальность: @(((Engineer)item).speciality)<br></text>
+                            }
+                        </div>                    
+                    }
+                }
+                else{
+                    <div class="collection_item">Коллекция пуста</div>
+                }
+                
+            </div>
+            <div class="forms">
+                <h2 class="forms_header">Поля для ввода</h2>
+                <form method="post" asp-action="Index">
+                    <div class="forms_field">
+                        <label asp-for="surname">Фамилия:</label>
+                        <input asp-for="surname" />
+                    </div>
+                    <div class="forms_field">
+                        <label asp-for="first_name">Имя:</label>
+                        <input asp-for="first_name" />
+                    </div>
+                    <div class="forms_field">
+                        <label asp-for="patronymic">Отчество:</label>
+                        <input asp-for="patronymic" />
+                    </div>
+                    <div class="forms_field">
+                        <label asp-for="action">Действие:</label>
+                        <select asp-for="action">
+                            <option value="add">добавить</option>
+                            <option value="delete">удалить</option>
+                        </select>
+                    </div>
+                    <div class="forms_field">
+                        <button type="submit">Выполнить действие</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </body>
+</html> 

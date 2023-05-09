@@ -1,0 +1,39 @@
+.html{
+    font-family: Arial, Helvetica, sans-serif;
+}
+.container{
+    display: flex;
+}
+
+/*collection*/
+.collection{
+    width: 20%; 
+    margin: 0 5%;
+}
+.collection_header{
+    font-size: 25px;
+}
+.collection_item{
+    border-width: 2px;
+    border-style: solid;
+    border-color: black;
+    padding: 1em;
+    margin: 1em 0;
+    font-size: 15px;
+}
+
+/*forms*/
+.forms{
+    margin: 0 5%;
+}
+.forms_header{
+    font-size: 25px;
+}
+.forms_field{
+    display: flex;
+    justify-content: flex-end;
+    padding: 1em 1em 0;
+}
+.forms_field > label {
+    padding: 0 1em 0 0;
+}

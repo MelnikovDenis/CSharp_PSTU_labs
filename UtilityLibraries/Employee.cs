@@ -1,9 +1,15 @@
-﻿namespace UtilityLibraries;
+﻿using Newtonsoft.Json;
+namespace UtilityLibraries;
+[Serializable]
 public class Employee : Person
 {
+    [JsonIgnore]
     public const int MIN_SALARY = 10000; //включительно
+    [JsonIgnore]
     public const int MAX_SALARY = 100000; //не включительно
+    [JsonIgnore]
     public const int MIN_WORK_LENGTH = 0; //включительно
+    [JsonIgnore]
     public const int MAX_WORK_LENGTH = 70; //не включительно
     public int salary { get; protected set; } = 0;
     public int work_length { get; protected set; } = 0;

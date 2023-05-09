@@ -1,13 +1,18 @@
-﻿namespace UtilityLibraries;
-using System.Collections;
+﻿using Newtonsoft.Json;
+namespace UtilityLibraries;
+[Serializable]
 public class Person : IRandomInit, IComparable<Person>, ICloneable
 {
+    [JsonIgnore]
     protected static readonly string[] names = { "Денис", "Иван", "Олег", "Василий", "Сергей", "Павел", "Вячеслав", "Виктор", "Михаил", "Анатолий", "Владислав", "Валерий" };
+    [JsonIgnore]
     protected static readonly string[] surnames = { "Мельников", "Мазунин", "Гостев", "Иванов", "Кузнецов", "Глазырин", "Власов", "Омутных", "Воронин", "Соколков" };
+    [JsonIgnore]
     protected static readonly string[] patronymics = { "Денисович", "Иванович", "Олегович", "Васильевич", "Вячеславович", "Михайлович", "Анатольевич", "Валерьевич"};
     public string? first_name { get; protected set; } = null;
     public string? surname { get; protected set; } = null;
     public string? patronymic { get; protected set; } = null;
+    [JsonIgnore]
     //возвращает объект базового класса
     public Person BasePerson
     {

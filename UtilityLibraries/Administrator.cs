@@ -1,6 +1,9 @@
-﻿namespace UtilityLibraries;
+﻿using Newtonsoft.Json;
+namespace UtilityLibraries;
+[Serializable]
 public class Administrator : Employee
 {
+    [JsonIgnore]
     public static readonly string[] departments = { "Отдел продаж", "Отдел техподдержки", "Отдел маркетинга", 
         "Информационный отдел", "Отдел связей с общественностью"};
     public string? department { get; internal set; } = null;

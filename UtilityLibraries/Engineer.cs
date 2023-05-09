@@ -1,6 +1,9 @@
-﻿namespace UtilityLibraries;
+﻿using Newtonsoft.Json;
+namespace UtilityLibraries;
+[Serializable]
 public class Engineer : Employee
 {
+    [JsonIgnore]
     public static readonly string[] specialties = { "Инженер-судостроитель", "Инженер-электрик", "Инженер-нефтяник", 
         "Инженер-технолог", "Инженер-конструктор", "Инженер-аналитик", "Программный инженер" };
     public string? speciality { get; protected set; } = null;

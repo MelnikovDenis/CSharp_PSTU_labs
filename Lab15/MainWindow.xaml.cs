@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.Metrics;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -29,21 +30,24 @@ namespace Lab15
             InitializeComponent();           
             this.DataContext = graph;
         }
-        private async void Start_Button_Click(object sender, RoutedEventArgs e)
+        private void Start_Button_Click(object sender, RoutedEventArgs e)
         {
-
-            double counter = 0d;
-            while (counter < graph.RangeTo) 
+            var thread = new Thread(UpdateGraph);
+            thread.Start();             
+        }
+        private void UpdateGraph()
+        {
+            var counter = 0d;
+            while(counter < graph.RangeTo) 
             {
+                ++counter;
                 List<Point> points = new List<Point>();
-                counter += 1d;
-                var calcTask = Task.Run(async () => {
-                    for (double x = counter * -1; x <= counter; x += graph.Accuracy)
-                        points.Add(new Point(x, 23d * Math.Pow(x, 2) - 32));
-                    await Task.Delay(100).ConfigureAwait(false);
+                for (double x = counter * -1d; x <= counter; x += graph.Accuracy)
+                    points.Add(new Point(x, 23d * Math.Pow(x, 2) - 32));    
+                Thread.Sleep(100);
+                this.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Normal, () => {
+                    graph.Points = new ObservableCollection<Point>(points);
                 });
-                await calcTask;
-                graph.Points = new ObservableCollection<Point>(points);
             }
             
         }

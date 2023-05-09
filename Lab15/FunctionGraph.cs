@@ -43,7 +43,7 @@ namespace Lab15
         /// Диапозон значений
         /// </summary>
         public double RangeTo { get; set; } = 100d;
-
+        public object _sync = new object();
         public event PropertyChangedEventHandler? PropertyChanged;
         public void OnPropertyChanged([CallerMemberName] string prop = "")
         {
