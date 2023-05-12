@@ -1,12 +1,16 @@
 ﻿using Newtonsoft.Json;
+using System.Xml.Serialization;
 namespace UtilityLibraries;
 [Serializable]
+[XmlInclude(typeof(Administrator))]
 public class Engineer : Employee
 {
     [JsonIgnore]
+    [NonSerialized]
     public static readonly string[] specialties = { "Инженер-судостроитель", "Инженер-электрик", "Инженер-нефтяник", 
         "Инженер-технолог", "Инженер-конструктор", "Инженер-аналитик", "Программный инженер" };
-    public string? speciality { get; protected set; } = null;
+    [JsonProperty("speciality")]
+    public string? speciality { get; set; } = null;
     public Engineer() : base(){
 
     }

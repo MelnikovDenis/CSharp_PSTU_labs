@@ -1,22 +1,18 @@
 using System.Text;
-using Newtonsoft.Json;
+using System.Xml.Serialization;
 using Lab12;
 using UtilityLibraries;
 
 namespace Lab16.Models.SerializationModels;
 
-public class JsonSerializator : ICollectionSerializator
+public class XmlSerializator : ICollectionSerializator
 {
-    JsonSerializerSettings settings { get; set; }= new JsonSerializerSettings(){
-        TypeNameHandling = TypeNameHandling.All,
-        Formatting = Formatting.Indented
-
-    };
+    XmlSerializer xmlSerializer { get; set; }= new XmlSerializer(typeof(MyLinkedList<Person>));
     public void SerializeCollection(IEnumerable<Person> persons, string path)
     {
         using (var sw = new StreamWriter(path, false, Encoding.Unicode))
         {
-            sw.WriteLine(JsonConvert.SerializeObject(persons, settings));
+            xmlSerializer.Serialize(sw, persons);
         }
     }
     public IEnumerable<Person> DeserializeCollection(string path)
@@ -24,7 +20,8 @@ public class JsonSerializator : ICollectionSerializator
         IEnumerable<Person> Persons;
         using(var sr = new StreamReader(path))
         {
-            Persons = JsonConvert.DeserializeObject<MyLinkedList<Person>>(sr.ReadToEnd(), settings).AsEnumerable<Person>();
+           Persons = (xmlSerializer.Deserialize(sr) as MyLinkedList<Person>) ?? 
+                        new MyLinkedList<Person>().AsEnumerable<Person>();
         }
         return Persons;
     }

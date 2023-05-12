@@ -1,12 +1,15 @@
 ﻿using Newtonsoft.Json;
+using System.Xml.Serialization;
 namespace UtilityLibraries;
 [Serializable]
 public class Administrator : Employee
 {
     [JsonIgnore]
+    [NonSerialized]
     public static readonly string[] departments = { "Отдел продаж", "Отдел техподдержки", "Отдел маркетинга", 
         "Информационный отдел", "Отдел связей с общественностью"};
-    public string? department { get; internal set; } = null;
+    [JsonProperty("department")]
+    public string? department { get; set; } = null;
     public Administrator() : base(){
         
     }

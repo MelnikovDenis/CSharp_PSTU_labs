@@ -1,5 +1,6 @@
 using System.Collections;
 namespace Lab12;
+[Serializable]
 public class MyLinkedList<T> : IEnumerable<T>, ICollection<T>, ICloneable
 {
       //класс перечислителя (энумератор)
@@ -53,6 +54,7 @@ public class MyLinkedList<T> : IEnumerable<T>, ICollection<T>, ICloneable
             //метод для удаления неуправляемых ресурсов перечислителя (их нет, так что метод пустой)
             public void Dispose() { }
       }
+      [Serializable]
       //класс узлов связного списка
       protected class Node
       {

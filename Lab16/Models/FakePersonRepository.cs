@@ -2,10 +2,11 @@ using Lab16.Models.SerializationModels;
 using UtilityLibraries;
 using Lab12;
 namespace Lab16.Models;
-//Псевдо БДы, которая сохраняет данные в json
+//Псевдо БД, которая сохраняет данные в json
 public class FakePersonRepository : IPersonRepository
 {
     ICollectionSerializator Serializator {get; set;} = new JsonSerializator();
+    string Path { get; set; } = "wwwroot/files/persons.json";
     private MyLinkedList<Person> persons = new MyLinkedList<Person>();
     public IEnumerable<Person> Persons 
     { 
@@ -21,16 +22,16 @@ public class FakePersonRepository : IPersonRepository
     
     public FakePersonRepository()
     {
-        Persons = Serializator.DeserializeCollection("wwwroot/files/persons.json");
+        Persons = Serializator.DeserializeCollection(Path);
     }
     public void Add(Person newPerson)
     {
         persons.Add(newPerson);
-        Serializator.SerializeCollection(Persons, "wwwroot/files/persons.json");
+        Serializator.SerializeCollection(Persons, Path);
     }
     public void Remove(Person toRemove)
     {
         persons.Remove(toRemove);
-        Serializator.SerializeCollection(Persons, "wwwroot/files/persons.json");
+        Serializator.SerializeCollection(Persons, Path);
     }
 }

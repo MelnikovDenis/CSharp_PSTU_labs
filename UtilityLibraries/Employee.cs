@@ -1,18 +1,25 @@
 ﻿using Newtonsoft.Json;
+using System.Xml.Serialization;
 namespace UtilityLibraries;
 [Serializable]
 public class Employee : Person
 {
     [JsonIgnore]
+    [NonSerialized]
     public const int MIN_SALARY = 10000; //включительно
     [JsonIgnore]
+    [NonSerialized]
     public const int MAX_SALARY = 100000; //не включительно
     [JsonIgnore]
+    [NonSerialized]
     public const int MIN_WORK_LENGTH = 0; //включительно
     [JsonIgnore]
+    [NonSerialized]
     public const int MAX_WORK_LENGTH = 70; //не включительно
-    public int salary { get; protected set; } = 0;
-    public int work_length { get; protected set; } = 0;
+    [JsonProperty("salary")]
+    public int salary { get; set; } = 0;
+    [JsonProperty("work_length")]
+    public int work_length { get; set; } = 0;
     public Employee() : base()
     {
 
