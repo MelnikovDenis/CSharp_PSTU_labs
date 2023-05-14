@@ -1,5 +1,4 @@
 using Lab16.Models;
-//using Newtonsoft.Json;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
@@ -12,7 +11,7 @@ app.UseStatusCodePages();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}"
+    pattern: "{controller=Home}/{action=AddPerson}/{id?}"
 );
 
 app.Run();

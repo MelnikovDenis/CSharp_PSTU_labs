@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Lab16.Models;
-using Lab16.Models.ViewModels;
 using UtilityLibraries;
+using Lab12;
 namespace Lab16.Controllers;
 public class HomeController : Controller
 {
@@ -13,33 +13,42 @@ public class HomeController : Controller
     }
 
     [HttpGet]
-    public IActionResult Index()
+    public IActionResult AddPerson()
     {
         ViewData["Collection"] = PersonRepository.Persons;
         return View();
     }
     [HttpPost]
-    public IActionResult Index(ActionResponse actionResponse)
+    public IActionResult AddPerson(Person person)
     {     
        
-        if(actionResponse.action == "add")
-        {
-            PersonRepository.Add(
-                new Person(actionResponse.first_name, 
-                actionResponse.surname, 
-                actionResponse.patronymic)
-            );            
-        }
-        else if(actionResponse.action == "delete")
-        {
-            PersonRepository.Remove(new Person(actionResponse.first_name, 
-                actionResponse.surname, 
-                actionResponse.patronymic));
-        }
-        else
-        {
-            throw new ArgumentException();
-        }
+        PersonRepository.Add(person); 
+        ViewData["Collection"] = PersonRepository.Persons;
+        return View();
+    }
+    [HttpGet]
+    public IActionResult FullNameSort()
+    {
+        PersonRepository.Persons = PersonRepository.Persons.OrderBy<Person, string>(p => p.surname + p.first_name + p.patronymic);
+        ViewData["Collection"] = PersonRepository.Persons;
+        return View();
+    }
+    [HttpGet]
+    public IActionResult GetAdministrators()
+    {
+        ViewData["Collection"] = from person in PersonRepository.Persons where person is Administrator select person;
+        return View();
+    }
+    [HttpGet]
+    public IActionResult GetEngineers()
+    {
+        ViewData["Collection"] = from person in PersonRepository.Persons where person is Engineer select person;
+        return View();
+    }
+    [HttpGet]
+    public IActionResult GenerateNewList()
+    {
+        PersonRepository.Persons = UserInterface.GenerateMyLinkedList(); 
         ViewData["Collection"] = PersonRepository.Persons;
         return View();
     }

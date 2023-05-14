@@ -1,16 +1,20 @@
 .html{
     font-family: Arial, Helvetica, sans-serif;
 }
+.header{
+    font-size: 25px;
+}
 .container{
     display: flex;
+    justify-content: space-around;
 }
 
 /*collection*/
 .collection{
-    margin: 0 5%;
-}
-.collection_header{
-    font-size: 25px;
+    margin: 0 5% 0 5%;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
 }
 .collection_item{
     border-width: 2px;
@@ -23,10 +27,7 @@
 
 /*forms*/
 .forms{
-    margin: 0 5%;
-}
-.forms_header{
-    font-size: 25px;
+    margin: 0 5% 0 5%;
 }
 .forms_field{
     display: flex;
@@ -35,4 +36,12 @@
 }
 .forms_field > label {
     padding: 0 1em 0 0;
+}
+/*menu*/
+.menu{
+    margin: 0 5%;
+}
+.menu_item
+{
+    margin: 1em 0;
 }

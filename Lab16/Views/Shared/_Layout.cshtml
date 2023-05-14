@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width" charset="utf-8"/>
+        <link rel="stylesheet" href="~/css/style.css" type="text/css" />
+        <title>Lab16</title>
+    </head>
+    <body>
+        <div class="container">
+            <div class="collection">
+                <h2 class="header">MyLinkedList</h2>
+                @{
+                    IEnumerable<Person>? Collection = (IEnumerable<Person>?)ViewData["Collection"];
+                }
+                @if(Collection is not null && Collection!.Count() > 0)
+                {
+                    @foreach (var item in Collection)
+                    {
+                        <div class="collection_item">
+                            Тип: @item.GetType()<br>
+                            ФИО: @item.surname @item.first_name @item.patronymic
+                            @if(item is Employee){
+                                <text><br>Зарплата: @(((Employee)item).salary.ToString("C2"))<br></text>
+                                <text>Стаж: @(((Employee)item).work_length)<br></text>
+                            }
+                            @if(item is Administrator){
+                                <text>Отдел: @(((Administrator)item).department)<br></text>
+                            }
+                            @if(item is Engineer){
+                                <text>Специальность: @(((Engineer)item).speciality)<br></text>
+                            }
+                        </div>                    
+                    }
+                }
+                else{
+                    <div class="collection_item">Коллекция пуста</div>
+                }                
+            </div>
+            <div class="menu">
+                <h2 class="header">Mеню</h2>
+                <div class="menu_item"><a asp-controller="Home" asp-action="GenerateNewList">Сгенерировать новый список</a></div>
+                <div class="menu_item"><a asp-controller="Home" asp-action="AddPerson">Добавить Person</a></div>
+                <div class="menu_item"><a asp-controller="Home" asp-action="RemoveByIndex">Удалить по индексу</a></div>
+                <div class="menu_item"><a asp-controller="Home" asp-action="UpdateByIndex">Обновить по индексу</a></div>
+                <div class="menu_item"><a asp-controller="Home" asp-action="FullNameSort">Отсортировать по имени</a></div>
+                <div class="menu_item"><a asp-controller="Home" asp-action="GetEngineers">Выбрать только инженеров</a></div>
+                <div class="menu_item"><a asp-controller="Home" asp-action="GetAdministrators">Выбрать только администраторов</a></div>
+                <div class="menu_item"><a asp-controller="Home" asp-action="DownloadJson">Скачать в JSON</a></div>
+                <div class="menu_item"><a asp-controller="Home" asp-action="DownloadXml">Скачать в XML</a></div>
+                <div class="menu_item"><a asp-controller="Home" asp-action="DownloadBinaryFile">Скачать в BinaryFile</a></div>
+                <div class="menu_item"><a asp-controller="Home" asp-action="UploadJson">Загрузить JSON</a></div>
+                <div class="menu_item"><a asp-controller="Home" asp-action="UploadXml">Загрузить XML</a></div>
+                <div class="menu_item"><a asp-controller="Home" asp-action="UploadBinaryFile">Загрузить BinaryFile</a></div>
+            </div>
+            @RenderBody()
+        </div>
+    </body>
+</html> 

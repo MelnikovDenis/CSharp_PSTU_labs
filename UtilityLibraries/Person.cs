@@ -1,5 +1,7 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using System.Xml.Serialization;
+using Newtonsoft.Json;
+
 namespace UtilityLibraries;
 [Serializable]
 [XmlInclude(typeof(Employee))]
@@ -23,6 +25,7 @@ public class Person : IRandomInit, IComparable<Person>, ICloneable
     [JsonProperty("patronymic")]
     public string? patronymic { get; set; } = null;
     [JsonIgnore]
+    [ValidateNever]
     //возвращает объект базового класса
     public Person BasePerson
     {

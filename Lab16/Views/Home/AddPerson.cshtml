@@ -1,0 +1,21 @@
+@model Person
+<div class="forms">
+    <h2 class="header">Добавить Person</h2>
+    <form method="post" asp-action="AddPerson">
+        <div class="forms_field">
+            <label asp-for="surname">Фамилия:</label>
+            <input asp-for="surname" />
+        </div>
+        <div class="forms_field">
+            <label asp-for="first_name">Имя:</label>
+            <input asp-for="first_name" />
+        </div>
+        <div class="forms_field">
+            <label asp-for="patronymic">Отчество:</label>
+            <input asp-for="patronymic" />
+        </div>        
+        <div class="forms_field">
+            <button type="submit">Добавить</button>
+        </div>
+    </form>
+</div>

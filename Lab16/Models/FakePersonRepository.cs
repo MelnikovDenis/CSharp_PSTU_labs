@@ -17,6 +17,7 @@ public class FakePersonRepository : IPersonRepository
         set
         {
             persons = new MyLinkedList<Person>(value);
+            Serializator.SerializeCollection(Persons, Path);
         }
     }
     
