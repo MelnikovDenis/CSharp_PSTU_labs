@@ -5,8 +5,8 @@ using static UtilityLibraries.PersonLibrary;
 namespace Lab12;
 public static class UserInterface
 {
-    internal static int MIN_LENGTH = 10;  //минимальная длина генерируемого списка (включительно)
-    internal static int MAX_LENGTH = 20;  //максимальная длина генерируемого списка (не включительно
+    internal static int MIN_LENGTH = 5;  //минимальная длина генерируемого списка (включительно)
+    internal static int MAX_LENGTH = 10;  //максимальная длина генерируемого списка (не включительно
     
     //основной метод интерфейса взаимойдействия с пользователем
     internal static void Execute(){
