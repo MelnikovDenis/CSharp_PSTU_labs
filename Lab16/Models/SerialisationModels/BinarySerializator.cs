@@ -1,28 +1,23 @@
 using System.Runtime.Serialization.Formatters.Binary;
-using Lab12;
-using UtilityLibraries;
+using System.Net.Mime;
 
 namespace Lab16.Models.SerializationModels;
 #pragma warning disable SYSLIB0011
-public class BinarySerializator : ICollectionSerializator
+public class BinarySerializator : ISerializator
 {
+      public string FileType => "dat";
+      public string MIMEType => MediaTypeNames.Application.Octet;
       public BinaryFormatter formatter { get; set; } = new BinaryFormatter();
-      public void SerializeCollection(IEnumerable<Person> persons, string path)
+      public MemoryStream Serialize<T>(T obj)
       {
-            using (var fs = new FileStream(path, FileMode.OpenOrCreate))
-            {
-                  formatter.Serialize(fs, persons);                
-            }
+            var ms = new MemoryStream();
+            formatter.Serialize(ms, obj);
+            return ms;
       }
-      public IEnumerable<Person> DeserializeCollection(string path)
+      public T Deserialize<T>(Stream ms)
       {
-            IEnumerable<Person> Persons;
-            using(var fs = new FileStream(path, FileMode.Open))
-            {
-                  
-                  Persons = (MyLinkedList<Person>)formatter.Deserialize(fs);
-            }
-            return Persons;
-      }
+            T obj = (T)formatter.Deserialize(ms);
+            return obj;
+      }  
 }
 #pragma warning restore SYSLIB0011

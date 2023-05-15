@@ -1,28 +1,24 @@
-using System.Text;
+using System.Net.Mime;
 using System.Xml.Serialization;
-using Lab12;
-using UtilityLibraries;
 
 namespace Lab16.Models.SerializationModels;
 
-public class XmlSerializator : ICollectionSerializator
+public class XmlSerializator : ISerializator
 {
-    XmlSerializer xmlSerializer { get; set; }= new XmlSerializer(typeof(MyLinkedList<Person>));
-    public void SerializeCollection(IEnumerable<Person> persons, string path)
+    public string FileType => "xml";
+    public string MIMEType => MediaTypeNames.Application.Xml;
+    
+    public MemoryStream Serialize<T>(T obj)
     {
-        using (var sw = new StreamWriter(path, false, Encoding.Unicode))
-        {
-            xmlSerializer.Serialize(sw, persons);
-        }
+        XmlSerializer xmlSerializer = new XmlSerializer(typeof(T));
+        var ms = new MemoryStream();
+        xmlSerializer.Serialize(ms, obj);
+        return ms;
     }
-    public IEnumerable<Person> DeserializeCollection(string path)
+    public T Deserialize<T>(Stream ms)
     {
-        IEnumerable<Person> Persons;
-        using(var sr = new StreamReader(path))
-        {
-           Persons = (xmlSerializer.Deserialize(sr) as MyLinkedList<Person>) ?? 
-                        new MyLinkedList<Person>().AsEnumerable<Person>();
-        }
-        return Persons;
+        XmlSerializer xmlSerializer = new XmlSerializer(typeof(T));         
+        T obj = (T)xmlSerializer.Deserialize(ms);
+        return obj;
     }
 }

@@ -1,31 +1,31 @@
 using System.Text;
+using System.Net.Mime;
 using Newtonsoft.Json;
-using Lab12;
-using UtilityLibraries;
 
 namespace Lab16.Models.SerializationModels;
 
-public class JsonSerializator : ICollectionSerializator
+public class JsonSerializator : ISerializator
 {
-    JsonSerializerSettings settings { get; set; }= new JsonSerializerSettings(){
+    public string FileType => "json";
+    public string MIMEType => MediaTypeNames.Application.Json;
+    public JsonSerializerSettings settings { get; set; } = new JsonSerializerSettings(){
         TypeNameHandling = TypeNameHandling.All,
         Formatting = Formatting.Indented
-
     };
-    public void SerializeCollection(IEnumerable<Person> persons, string path)
+    public MemoryStream Serialize<T>(T obj)
     {
-        using (var sw = new StreamWriter(path, false, Encoding.Unicode))
-        {
-            sw.WriteLine(JsonConvert.SerializeObject(persons, settings));
-        }
+        var ms = new MemoryStream();
+        var buffer = Encoding.Unicode.GetBytes(JsonConvert.SerializeObject(obj, settings));
+        ms.Write(buffer, 0, buffer.Count());
+        return ms;
     }
-    public IEnumerable<Person> DeserializeCollection(string path)
+    public T Deserialize<T>(Stream ms)
     {
-        IEnumerable<Person> Persons;
-        using(var sr = new StreamReader(path))
+        T obj;        
+        using(var sr = new StreamReader(ms, Encoding.Unicode))
         {
-            Persons = JsonConvert.DeserializeObject<MyLinkedList<Person>>(sr.ReadToEnd(), settings).AsEnumerable<Person>();
+            obj = JsonConvert.DeserializeObject<T>(sr.ReadToEnd(), settings);
         }
-        return Persons;
-    }
+        return obj;
+    }    
 }

@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Lab16.Models;
+using Lab16.Models.SerializationModels;
 using UtilityLibraries;
 using Lab12;
 namespace Lab16.Controllers;
@@ -23,6 +24,20 @@ public class HomeController : Controller
     {     
        
         PersonRepository.Add(person); 
+        ViewData["Collection"] = PersonRepository.Persons;
+        return View();
+    }
+    [HttpGet]
+    public IActionResult RemoveByValue()
+    {
+        ViewData["Collection"] = PersonRepository.Persons;
+        return View();
+    }
+    [HttpPost]
+    public IActionResult RemoveByValue(Person person)
+    {     
+       
+        PersonRepository.Remove(person); 
         ViewData["Collection"] = PersonRepository.Persons;
         return View();
     }
@@ -51,5 +66,23 @@ public class HomeController : Controller
         PersonRepository.Persons = UserInterface.GenerateMyLinkedList(); 
         ViewData["Collection"] = PersonRepository.Persons;
         return View();
+    }
+    [HttpGet]
+    public IActionResult DownloadJson()
+    {
+        var serializationWorker = new SerializationWorker(new JsonSerializator());
+        return serializationWorker.SerializeToFileContent<List<Person>>(PersonRepository.Persons.ToList<Person>(), File);
+    }
+    [HttpGet]
+    public IActionResult DownloadXml()
+    {
+        var serializationWorker = new SerializationWorker(new XmlSerializator());
+        return serializationWorker.SerializeToFileContent<List<Person>>(PersonRepository.Persons.ToList<Person>(), File);
+    }
+    [HttpGet]
+    public IActionResult DownloadBinaryFile()
+    {
+        var serializationWorker = new SerializationWorker(new BinarySerializator());
+        return serializationWorker.SerializeToFileContent<List<Person>>(PersonRepository.Persons.ToList<Person>(), File);
     }
 }
