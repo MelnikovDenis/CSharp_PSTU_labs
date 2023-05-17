@@ -1,0 +1,12 @@
+@model IFormFile
+<div class="forms">
+      <h2 class="header">Выберите JSON файл для загрузки</h2>
+      <form asp-action="UploadJson" asp-controller="Home" method="post" enctype="multipart/form-data">
+            <div class="forms_field">
+                  <input type="file" name="uploadedFile" value=@Model/><br>
+            </div>
+            <div class="forms_field">
+                  <input type="submit" value="Загрузить" />
+            </div>
+      </form>
+</div>

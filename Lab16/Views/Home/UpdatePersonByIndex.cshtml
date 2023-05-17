@@ -1,0 +1,25 @@
+@model UpdatePersonByIndexModel
+<div class="forms">
+    <h2 class="header">Изменить по индексу</h2>
+    <form method="post" asp-action="UpdatePersonByIndex">
+      <div class="forms_field">
+            <label asp-for="index">Индекс:</label>
+            <input asp-for="index" />
+        </div>
+        <div class="forms_field">
+            <label asp-for="person.surname">Фамилия:</label>
+            <input asp-for="person.surname" />
+        </div>
+        <div class="forms_field">
+            <label asp-for="person.first_name">Имя:</label>
+            <input asp-for="person.first_name" />
+        </div>
+        <div class="forms_field">
+            <label asp-for="person.patronymic">Отчество:</label>
+            <input asp-for="person.patronymic" />
+        </div>        
+        <div class="forms_field">
+            <button type="submit">Обновить</button>
+        </div>
+    </form>
+</div>

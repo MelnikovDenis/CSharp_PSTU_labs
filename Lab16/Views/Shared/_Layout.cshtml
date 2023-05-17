@@ -14,9 +14,11 @@
                 }
                 @if(Collection is not null && Collection!.Count() > 0)
                 {
+                    int index = 0;
                     @foreach (var item in Collection)
-                    {
+                    {                        
                         <div class="collection_item">
+                            Индекс: @(index++)<br>
                             Тип: @item.GetType()<br>
                             ФИО: @item.surname @item.first_name @item.patronymic
                             @if(item is Employee){
@@ -41,7 +43,7 @@
                 <div class="menu_item"><a asp-controller="Home" asp-action="GenerateNewList">Сгенерировать новый список</a></div>
                 <div class="menu_item"><a asp-controller="Home" asp-action="AddPerson">Добавить Person</a></div>
                 <div class="menu_item"><a asp-controller="Home" asp-action="RemoveByValue">Удалить по значению</a></div>
-                <div class="menu_item"><a asp-controller="Home" asp-action="UpdateByIndex">Обновить по индексу</a></div>
+                <div class="menu_item"><a asp-controller="Home" asp-action="UpdatePersonByIndex">Обновить по индексу</a></div>
                 <div class="menu_item"><a asp-controller="Home" asp-action="FullNameSort">Отсортировать по имени</a></div>
                 <div class="menu_item"><a asp-controller="Home" asp-action="GetEngineers">Выбрать только инженеров</a></div>
                 <div class="menu_item"><a asp-controller="Home" asp-action="GetAdministrators">Выбрать только администраторов</a></div>

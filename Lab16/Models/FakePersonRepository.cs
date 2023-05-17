@@ -1,17 +1,17 @@
 using Lab16.Models.SerializationModels;
 using UtilityLibraries;
-using Lab12;
+using Lab13;
 
 namespace Lab16.Models;
 //Псевдо БД, которая сохраняет данные в json
 public class FakePersonRepository : IPersonRepository
 {
-    public ISerializator Serializator {get; set;} = new BinarySerializator();
+    public ISerializator Serializator {get; set;} = new JsonSerializator();
     public string Path { get {
             return "wwwroot/files/persons." + Serializator.FileType;
         }
     }
-    private MyLinkedList<Person> persons = new MyLinkedList<Person>();
+    private MyExtendedLinkedList<Person> persons = new MyExtendedLinkedList<Person>();
     public IEnumerable<Person> Persons 
     { 
         get
@@ -20,7 +20,7 @@ public class FakePersonRepository : IPersonRepository
         }
         set
         {
-            persons = new MyLinkedList<Person>(value);
+            persons = new MyExtendedLinkedList<Person>(value);
             SerializeToFile();
         }
     }
@@ -39,12 +39,31 @@ public class FakePersonRepository : IPersonRepository
         persons.Remove(toRemove);
         SerializeToFile();
     }
+    public void UpdateByIndex(Person newPerson, int index)
+    {
+        if(persons.Count() > 0)
+        {
+            if(index >= 0 && index < persons.Count())
+            {
+                persons[index] = newPerson;
+                SerializeToFile();
+            }
+            else
+            {
+                throw new IndexOutOfRangeException($"Индекс выходит за границы списка, допустимые значения находятся в диапозоне [0, {persons.Count()})");
+            }
+        }
+        else
+        {
+            throw new ArgumentException("Невозможно обновить элемент в пустом списке");
+        }
+    }
     //Десериализация из файла
     private void DeserializeFromFile()
     {        
         using(var fs = new FileStream(Path, FileMode.Open, FileAccess.Read))
         {
-            this.persons = Serializator.Deserialize<MyLinkedList<Person>>(fs);
+            this.persons = Serializator.Deserialize<MyExtendedLinkedList<Person>>(fs);
         }
     }
     //Сериализация в файл
@@ -52,7 +71,7 @@ public class FakePersonRepository : IPersonRepository
     {
         using(var fs = new FileStream(Path, FileMode.Create))
         {
-            var ms = Serializator.Serialize<MyLinkedList<Person>>(persons);
+            var ms = Serializator.Serialize<MyExtendedLinkedList<Person>>(persons);
             ms.WriteTo(fs);
         }
     }

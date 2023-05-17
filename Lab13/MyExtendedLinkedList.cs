@@ -1,8 +1,9 @@
 using Lab12;
 namespace Lab13;
 //класс с новыми методами, унаследованный из класса из 12 лабы (так нужно по условию)
+[Serializable]
 public class MyExtendedLinkedList<T> : MyLinkedList<T>{
-      public string Name {get; set;}
+      public string Name {get; set;} = "РасширенныйCвязныйCписок";
       public virtual T this[int index]{
             get{
                   if(index >= 0 && index < Count){
@@ -28,6 +29,12 @@ public class MyExtendedLinkedList<T> : MyLinkedList<T>{
                         throw new ArgumentOutOfRangeException("Индекс выходит за границы списка");
                   }
             }
+      }
+      public MyExtendedLinkedList():base(){
+
+      }
+      public MyExtendedLinkedList(IEnumerable<T> enumerable):base(enumerable){
+
       }
       public MyExtendedLinkedList(string Name):base(){
             this.Name = Name;

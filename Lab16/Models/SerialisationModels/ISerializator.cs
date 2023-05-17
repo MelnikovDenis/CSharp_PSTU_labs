@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Mvc;
 namespace Lab16.Models.SerializationModels;
 
 public interface ISerializator
