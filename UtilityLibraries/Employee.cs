@@ -2,6 +2,8 @@
 using System.Xml.Serialization;
 namespace UtilityLibraries;
 [Serializable]
+[XmlInclude(typeof(Administrator))]
+[XmlInclude(typeof(Engineer))]
 public class Employee : Person
 {
     [JsonIgnore]

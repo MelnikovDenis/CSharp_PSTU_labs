@@ -9,7 +9,9 @@ public class JsonSerializator : ISerializator
     public string FileType => "json";
     public string MIMEType => MediaTypeNames.Application.Json;
     public JsonSerializerSettings settings { get; set; } = new JsonSerializerSettings(){
+        //для прописывания типов данных в файле (для корректной сериализации)
         TypeNameHandling = TypeNameHandling.All,
+        //делает файл красивым
         Formatting = Formatting.Indented
     };
     public MemoryStream Serialize<T>(T obj)
